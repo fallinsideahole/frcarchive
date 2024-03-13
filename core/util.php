@@ -21,10 +21,10 @@ function get_theme(): string
     return $theme;
 }
 
-function contact_link(): ?string
+function contact_link(?string $contact = null): ?string
 {
     global $config;
-    $text = $config->get_string('contact_link');
+    $text = $contact ?? $config->get_string('contact_link');
     if (is_null($text)) {
         return null;
     }
@@ -42,7 +42,7 @@ function contact_link(): ?string
     }
 
     if (str_contains($text, "/")) {
-        return "http://$text";
+        return "https://$text";
     }
 
     return $text;
@@ -151,8 +151,14 @@ function check_im_version(): int
 function is_trusted_proxy(): bool
 {
     $ra = $_SERVER['REMOTE_ADDR'] ?? "0.0.0.0";
+    if(!defined("TRUSTED_PROXIES")) {
+        return false;
+    }
     // @phpstan-ignore-next-line - TRUSTED_PROXIES is defined in config
     foreach(TRUSTED_PROXIES as $proxy) {
+        if($ra === $proxy) { // check for "unix:" before checking IPs
+            return true;
+        }
         if(ip_in_range($ra, $proxy)) {
             return true;
         }
@@ -166,6 +172,10 @@ function is_trusted_proxy(): bool
 function get_real_ip(): string
 {
     $ip = $_SERVER['REMOTE_ADDR'];
+
+    if($ip == "unix:") {
+        $ip = "0.0.0.0";
+    }
 
     if(is_trusted_proxy()) {
         if (isset($_SERVER['HTTP_X_REAL_IP'])) {
