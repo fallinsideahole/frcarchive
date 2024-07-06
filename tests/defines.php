@@ -23,4 +23,3 @@ define("TIMEZONE", 'UTC');
 define("CLI_LOG_LEVEL", 50);
 define("STATSD_HOST", null);
 define("TRUSTED_PROXIES", []);
-define("SECRET", "asdfghjkl");
