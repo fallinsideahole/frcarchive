@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Shimmie2;
 
-use function MicroHTML\SCRIPT;
-
 class GoogleAnalytics extends Extension
 {
     # Add analytics to config
@@ -13,7 +11,7 @@ class GoogleAnalytics extends Extension
     {
         $sb = $event->panel->create_new_block("Google Analytics");
         $sb->add_text_option("google_analytics_id", "Analytics ID: ");
-        $sb->add_label("<br>(eg. UA-xxxxxxxx-x)");
+        $sb->add_label("<br>(eg. G-xxxxxxxx)");
     }
 
     # Load Analytics tracking code on page request
@@ -22,17 +20,16 @@ class GoogleAnalytics extends Extension
         global $config, $page;
 
         $google_analytics_id = $config->get_string('google_analytics_id', '');
-        if (stristr($google_analytics_id, "UA-")) {
-            $page->add_html_header(SCRIPT(["type" => 'text/javascript'], "
-                var _gaq = _gaq || [];
-                _gaq.push(['_setAccount', '$google_analytics_id']);
-                _gaq.push(['_trackPageview']);
-                (function() {
-                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                    ga.src = ('https:' === document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-                })();
-            "));
+        if (stristr($google_analytics_id, "G-")) {
+            $page->add_html_header("<script async src=\"https://www.googletagmanager.com/gtag/js?id=$google_analytics_id\"></script>
+                                    <script>
+                                      window.dataLayer = window.dataLayer || [];
+                                      function gtag(){dataLayer.push(arguments);}
+                                      gtag('js', new Date());
+                                    
+                                      gtag('config', '$google_analytics_id');
+                                    </script>
+                                    ");
         }
     }
 }
