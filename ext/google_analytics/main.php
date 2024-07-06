@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Shimmie2;
 
+use function MicroHTML\SCRIPT;
+
 class GoogleAnalytics extends Extension
 {
     # Add analytics to config
