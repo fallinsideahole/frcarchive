@@ -28,7 +28,7 @@ class Home extends Extension
         $counters = [];
         $counters["None"] = "none";
         $counters["Text-only"] = "text-only";
-        foreach (\Safe\glob("ext/home/counters/*") as $counter_dirname) {
+        foreach (glob_ex("ext/home/counters/*") as $counter_dirname) {
             $name = str_replace("ext/home/counters/", "", $counter_dirname);
             $counters[ucfirst($name)] = $name;
         }
@@ -61,7 +61,7 @@ class Home extends Extension
                 $length = strlen($strtotal);
                 for ($n = 0; $n < $length; $n++) {
                     $cur = $strtotal[$n];
-                    $counter_text .= "<img class='counter-img' alt='$cur' src='$base_href/ext/home/counters/$counter_dir/$cur.gif' />";
+                    $counter_text .= "<img alt='$cur' src='$base_href/ext/home/counters/$counter_dir/$cur.gif' />";
                 }
             }
         }
@@ -77,7 +77,8 @@ class Home extends Extension
             if (Extension::is_enabled(WikiInfo::KEY)) {
                 $main_links .= '[url=site://wiki]Wiki[/url]';
             }
-            $main_links .= '[url=site://ext_doc]Documentation[/url]';
+            $main_links .= '[url=https://www.frcarchive.com/frcwiki/index.php/Main_Page]Wiki[/url]';
+            //$main_links .= '[url=site://ext_doc]Documentation[/url]';
         }
         $main_links = format_text($main_links);
         $main_text = $config->get_string('home_text', '');
