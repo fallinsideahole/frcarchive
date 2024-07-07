@@ -23,15 +23,13 @@ class GoogleAnalytics extends Extension
 
         $google_analytics_id = $config->get_string('google_analytics_id', '');
         if (stristr($google_analytics_id, "G-")) {
-            $page->add_html_header("<script async src=\"https://www.googletagmanager.com/gtag/js?id=$google_analytics_id\"></script>
-                                    <script>
+            $page->add_html_header(SCRIPT(["src" => 'https://www.googletagmanager.com/gtag/js?id=$google_analytics_id'],"
                                       window.dataLayer = window.dataLayer || [];
                                       function gtag(){dataLayer.push(arguments);}
                                       gtag('js', new Date());
                                     
                                       gtag('config', '$google_analytics_id');
-                                    </script>
-                                    ");
+                                    "));
         }
     }
 }
